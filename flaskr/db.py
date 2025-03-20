@@ -4,7 +4,7 @@ from datetime import datetime
 import click
 from flask import Flask, current_app, g
 
-def get_db():
+def get_db() -> sqlite3.Connection:
     if 'db' not in g:
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
@@ -16,7 +16,7 @@ def get_db():
 def close_db(e=None):
     db = g.pop('db', None)
 
-    if db is None:
+    if db is not None:
         db.close()
 
 def init_db():
