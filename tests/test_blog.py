@@ -46,3 +46,12 @@ def test_author_required(app: Flask, client, auth):
   # current user doesn't see edit link
   assert b'href="/1/update"' not in client.get('/').data
 
+
+@pytest.mark.parametrize('path', (
+  '/2/update',
+  '/2/delete'
+))
+def test_exists_required(client, auth, path):
+  auth.login()
+  assert client.post(path).status_code == 404
+  
