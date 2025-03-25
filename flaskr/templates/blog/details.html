@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Posts - {{post.title}}{% endblock %}</h1>
+{% endblock header %}
+
+{% block content %}
+<article class="post">
+  <header>
+    <div>
+      <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+    </div>
+    {% if g.user['id'] == post['author_id'] %}
+      <a href="{{ url_for('blog.update', id=post['id'])}}" class="action">Edit</a>
+    {% endif %}
+  </header>
+  <a onclick="window.history.back()">Go back</a>
+  <p class="body">{{ post['body'] }}</p>
+</article>
+{% endblock %}
