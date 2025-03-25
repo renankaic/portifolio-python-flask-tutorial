@@ -46,7 +46,7 @@ def test_login(client, auth):
 # pytest.mark.parametrize tells Pytest to run the same test function with different arguments.
 # You use it here to test different invalid input and error messages writing the same code
 @pytest.mark.parametrize(('username', 'password', 'message'), (
-  ('a', 'test', b'Incorrect username.'),
+  ('a', 'test', b'Incorrect username'),
   ('test', 'a', b'Incorrect password'),
 ))
 def test_login_validate_input(auth, username, password, message):

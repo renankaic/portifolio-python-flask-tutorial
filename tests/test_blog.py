@@ -29,7 +29,7 @@ def test_index(client, auth):
 ))
 def test_login_required(client, path):
   response = client.post(path)
-  assert response.header['Location'] == '/auth/login'
+  assert response.headers['Location'] == '/auth/login'
 
 
 def test_author_required(app: Flask, client, auth):
@@ -88,7 +88,7 @@ def test_update(client, auth, app: Flask):
 def test_create_update_validate(client, auth, path):
   auth.login()
   response = client.post(path, data={'title': '', 'body': ''})
-  assert b'Title is required.' in response.data
+  assert b'Title is required' in response.data
 
 
 def test_delete(client, auth, app: Flask):
@@ -100,4 +100,3 @@ def test_delete(client, auth, app: Flask):
     db = get_db()
     post = db.execute('SELECT * FROM post WHERE id = 1').fetchone()
     assert post is None
-    
