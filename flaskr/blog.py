@@ -8,10 +8,10 @@ bp = Blueprint("blog", __name__)
 
 def get_post(id, check_author=True):
     post = get_db().execute(
-        "SELECT p.id, title, body, created, author_id, username,(SELECT count(author_id) FROM post_likes WHERE post_id = ? AND author_id = ?) as 'liked' ,(SELECT count(author_id) FROM post_likes WHERE post_id = ?) as 'likes'"
+        "SELECT p.id, title, body, created, author_id, username,(SELECT count(author_id) FROM post_likes WHERE post_id = p.id AND author_id = ?) as 'liked' ,(SELECT count(author_id) FROM post_likes WHERE post_id = p.id) as 'likes'"
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?',
-        (id, session['user_id'], id, id)
+        (session['user_id'], id)
     ).fetchone()
 
     if post is None:
@@ -27,7 +27,7 @@ def get_post(id, check_author=True):
 def index():
     db = get_db()
     posts = db.execute(
-        "SELECT p.id, title, body, created, author_id, username"
+        "SELECT p.id, title, body, created, author_id, username, (SELECT count(author_id) FROM post_likes WHERE post_id = p.id) as 'likes'"
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC"
     ).fetchall()
