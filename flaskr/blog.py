@@ -23,11 +23,22 @@ def get_post(id, check_author=True):
     return post
 
 
+def get_post_comments(id):
+    post_comments = get_db().execute(
+        "SELECT u.username, pc.comment, pc.created"
+        " FROM post_comments pc JOIN user u ON pc.author_id = u.id"        
+        " WHERE pc.post_id = ?"
+        " ORDER BY created DESC",
+        (id,)
+    ).fetchall()
+
+    return post_comments
+
 @bp.route("/")
 def index():
     db = get_db()
     posts = db.execute(
-        "SELECT p.id, title, body, created, author_id, username, (SELECT count(author_id) FROM post_likes WHERE post_id = p.id) as 'likes'"
+        "SELECT p.id, title, body, created, author_id, username, (SELECT count(author_id) FROM post_likes WHERE post_id = p.id) as 'likes', (SELECT count (id) FROM post_comments WHERE post_id = p.id) as 'comments' "
         " FROM post p JOIN user u ON p.author_id = u.id"
         " ORDER BY created DESC"
     ).fetchall()
@@ -64,7 +75,8 @@ def create():
 @login_required
 def details(id: int):
     post = get_post(id, check_author=False)
-    return render_template('blog/details.html', post=post)
+    comments = get_post_comments(post['id'])    
+    return render_template('blog/details.html', post=post, comments=comments)
 
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
@@ -126,6 +138,25 @@ def dislike(post_id: int):
     db.execute(
       'DELETE FROM post_likes WHERE post_id = ? AND author_id = ?',
       (post_id, session['user_id'])
+    )
+    db.commit()
+    return redirect(url_for('blog.details', id=post_id))
+
+
+@bp.route('/<int:post_id>/comments', methods=('POST',))
+@login_required
+def comment(post_id: int):
+    get_post(post_id, check_author=False)
+    comment = request.form['comment']
+
+    if len(comment) == 0:
+      return redirect(url_for('blog.details', id=post_id)), 400
+
+    db = get_db()
+    db.execute(
+      'INSERT INTO post_comments(post_id, author_id, comment)'
+      ' VALUES(?, ?, ?)',
+      (post_id, session['user_id'], comment)
     )
     db.commit()
     return redirect(url_for('blog.details', id=post_id))

@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS post_likes;
+DROP TABLE IF EXISTS post_comments;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,4 +25,14 @@ CREATE TABLE post_likes (
   FOREIGN KEY (post_id) REFERENCES post(id),
   FOREIGN KEY (author_id) REFERENCES user (id),
   UNIQUE(post_id, author_id) ON CONFLICT REPLACE
+);
+
+CREATE TABLE post_comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  post_id INTEGER NOT NULL,z
+  author_id INTEGER NOT NULL,
+  comment TEXT NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES post(id),
+  FOREIGN KEY (author_id) REFERENCES user (id)  
 );

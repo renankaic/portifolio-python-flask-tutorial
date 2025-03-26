@@ -25,4 +25,20 @@
     {% endif %}
   </footer>
 </article>
+
+<section class="comments">
+  <h2>Comments</h2>
+  <form method="post" action="{{ url_for('blog.comment', post_id=post['id']) }}">
+    <textarea rows="2" placeholder="Type your comment here..." name="comment"></textarea>
+    <button type="submit">Add comment</button>    
+  </form>
+  <ul>
+    {% for comment in comments%}
+      <li>
+        <p><strong>{{ comment['username'] }}</strong> on {{ comment['created'].strftime('%Y-%m-%d %H:%M') }}</p>
+        <p>{{ comment['comment'] }}</p>
+      </li>
+    {% endfor %}
+  <ul>
+</section>
 {% endblock %}
