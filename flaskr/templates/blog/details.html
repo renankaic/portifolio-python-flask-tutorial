@@ -16,5 +16,13 @@
   </header>
   <a onclick="window.history.back()">Go back</a>
   <p class="body">{{ post['body'] }}</p>
+  <footer>
+    <p>Likes: {{ post['likes'] }}</p>    
+    {% if not post['liked'] %}
+      <a href="{{ url_for('blog.like', post_id=post['id']) }}">Like</a>
+    {% else %}
+      <a href="{{ url_for('blog.dislike', post_id=post['id']) }}">Dislike</a>
+    {% endif %}
+  </footer>
 </article>
 {% endblock %}

@@ -15,3 +15,12 @@ CREATE TABLE post (
   body TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES user (id)
 );
+
+CREATE TABLE post_likes (
+  post_id INTEGER  NOT NULL,
+  author_id INTEGER NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES post(id),
+  FOREIGN KEY (author_id) REFERENCES user (id),
+  UNIQUE(post_id, author_id) ON CONFLICT REPLACE
+);
