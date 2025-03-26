@@ -111,7 +111,7 @@ def like(post_id: int):
     get_post(post_id, check_author=False)
     db = get_db()
     db.execute(
-        'INSERT INTO post_likes(post_id, author_id) VALUES (?, ?)', 
+        'INSERT OR IGNORE INTO post_likes(post_id, author_id) VALUES (?, ?)', 
         (post_id, session['user_id'])
     )
     db.commit()
