@@ -10,6 +10,7 @@
   <input name="title" id="title" value="{{ request.form['title'] or post['title']}}" required />
   <label for="body">Body</label>
   <textarea name="body" id="body">{{ request.form['body'] or post['body']}}</textarea>
+  <input type="text" id="tags" name="tags" placeholder="Input tags for this post. Separate tags with ',' (comma)..." value="{{ request.form['tags'] or ', '.join(post['tags']) }}" required>
   <input type="submit" value="Save">
 </form>
 <hr>

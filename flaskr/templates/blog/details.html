@@ -23,6 +23,7 @@
     {% else %}
       <a href="{{ url_for('blog.dislike', post_id=post['id']) }}">Dislike</a>
     {% endif %}
+    <p>Tags: {% for tag in post['tags'] %}{{ tag }} {% endfor %}</p>
   </footer>
 </article>
 

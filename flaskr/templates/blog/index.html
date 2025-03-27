@@ -21,7 +21,8 @@
       </header>
       <p class="body">{{ post['body'] }}</p>
       <footer>
-        <p>Likes: {{ post['likes'] }} - Comments: {{ post['comments'] }}</p>        
+        <p>Likes: {{ post['likes'] }} - Comments: {{ post['comments'] }}</p>
+        <p>Tags: {% for tag in post['tags'] %}{{ tag }} {% endfor %}</p>     
       </footer>
     </article>
 
