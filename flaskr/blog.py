@@ -54,16 +54,17 @@ def tags_handle_incoming(tags: str) -> list[str]:
     return tags
 
 
-def post_tags_insert_or_update(db, post_id: int, tags: list[str]):
+def post_tags_insert_or_update(db, post_id: int, tags: list[str]):  
+  db.execute(
+       'DELETE FROM post_tags WHERE post_id = ?',
+       (post_id,)
+  )
+  
   for tag in tags:
     db.execute(
         'INSERT OR IGNORE INTO tags (tag_name) VALUES (?)',
         (tag,)
-    )
-    db.execute(
-       'DELETE FROM post_tags WHERE post_id = ?',
-       (post_id,)
-    )
+    )    
     db.execute(
         'INSERT OR IGNORE INTO post_tags (post_id, tag_name) VALUES (?,?)',
         (post_id, tag)
